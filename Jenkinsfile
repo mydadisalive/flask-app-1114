@@ -6,7 +6,8 @@ pipeline {
             steps {
                 cleanWs() // Jenkins workspace cleanup step
             }
-        }        stage('Clone Code') {
+        }
+        stage('Clone Code') {
             steps {
                 sh 'git clone https://github.com/mydadisalive/flask-app-1114.git'
                 sh 'ls'
@@ -14,13 +15,12 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh 'cd flask-app-1114'
-                sh 'docker build -t mydadisalive/cat-gifs:1.0 .'
+                sh 'cd flask-app-1114 && docker build -t mydadisalive/cat-gifs:1.0 .'
             }
         }
         stage('Test') {
             steps {
-                echo 'Hello World'
+                sh 'cd flask-app-1114 && pytest tests/'
             }
         }
         stage('Deploy') {

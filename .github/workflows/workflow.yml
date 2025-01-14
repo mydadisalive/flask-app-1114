@@ -16,7 +16,7 @@ jobs:
     # Step 2: Set Image Tag
     - name: Set Image Tag
       id: tag
-      run: echo "IMAGE_TAG=${{ github.run_number }}" >> $GITHUB_ENV
+      run: echo "IMAGE_TAG=1.0.${{ github.run_number }}" >> $GITHUB_ENV
 
     # Step 3: Log in to Docker Hub
     - name: Log in to Docker Hub

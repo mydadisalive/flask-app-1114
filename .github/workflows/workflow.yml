@@ -32,3 +32,14 @@ jobs:
     # Step 5: Push the Docker image
     - name: Push the Docker image
       run: docker push mydadisalive/flask-app:${{ env.IMAGE_TAG }}
+
+    # Step 6: Install sshpass
+    - name: Install sshpass
+      run: sudo apt-get install -y sshpass
+
+    # Step 7: SCP the flask-app.yaml file
+    - name: Transfer flask-app.yaml via SCP
+      env:
+        SCP_PASSWORD: ${{ secrets.SCP_PASSWORD }}
+      run: |
+        sshpass -p "$SCP_PASSWORD" scp flask-app.yaml sela@35.195.225.171:/home/sela/

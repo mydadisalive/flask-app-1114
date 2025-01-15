@@ -42,4 +42,4 @@ jobs:
       env:
         SCP_PASSWORD: ${{ secrets.SCP_PASSWORD }}
       run: |
-        sshpass -p "$SCP_PASSWORD" scp -o StrictHostKeyChecking=no flask-app-1114/flask-app.yaml sela@35.195.225.171:/home/sela/
+        sshpass -p "$SCP_PASSWORD" scp -o StrictHostKeyChecking=no flask-app.yaml sela@35.195.225.171:/home/sela/

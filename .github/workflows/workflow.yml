@@ -33,18 +33,23 @@ jobs:
     - name: Push the Docker image
       run: docker push mydadisalive/flask-app:${{ env.IMAGE_TAG }}
 
-    # Step 6: Install sshpass
+    # Step 6: Modify the YAML file
+    - name: Update image version in flask-app.yaml
+      run: |
+        sed -i "s|image: mydadisalive/flask-app:.*|image: mydadisalive/flask-app:${{ env.IMAGE_TAG }}|" flask-app.yaml
+
+    # Step 7: Install sshpass
     - name: Install sshpass
       run: sudo apt-get install -y sshpass
 
-    # Step 7: SCP the flask-app.yaml file
+    # Step 8: SCP the flask-app.yaml file
     - name: Transfer flask-app.yaml via SCP
       env:
         SCP_PASSWORD: ${{ secrets.SCP_PASSWORD }}
       run: |
         sshpass -p "$SCP_PASSWORD" scp -o StrictHostKeyChecking=no flask-app.yaml sela@35.195.225.171:/home/sela/
 
-    # Step 8: SSH to the machine and apply the YAML
+    # Step 9: SSH to the machine and apply the YAML
     - name: Apply flask-app.yaml on Kubernetes
       env:
         SSH_PASSWORD: ${{ secrets.SCP_PASSWORD }}

@@ -43,3 +43,10 @@ jobs:
         SCP_PASSWORD: ${{ secrets.SCP_PASSWORD }}
       run: |
         sshpass -p "$SCP_PASSWORD" scp -o StrictHostKeyChecking=no flask-app.yaml sela@35.195.225.171:/home/sela/
+
+    # Step 8: SSH to the machine and apply the YAML
+    - name: Apply flask-app.yaml on Kubernetes
+      env:
+        SSH_PASSWORD: ${{ secrets.SCP_PASSWORD }}
+      run: |
+        sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no sela@35.195.225.171 "kubectl apply -f /home/sela/flask-app.yaml"

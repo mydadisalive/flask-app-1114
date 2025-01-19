@@ -8,27 +8,38 @@ app = Flask(__name__)
 
 # Function to connect to MySQL database
 def get_db_connection():
-    return mysql.connector.connect(
-        host=os.getenv("DB_HOST", "mysql"),  # Default to "mysql" for Kubernetes service
-        user=os.getenv("DB_USER", "root"),
-        password=os.getenv("DB_PASSWORD", "rootpassword"),
-        database=os.getenv("DB_NAME", "catgifs")
-    )
+    try:
+        return mysql.connector.connect(
+            host=os.getenv("DB_HOST", "mysql"),  # Default to "mysql" for Kubernetes service
+            user=os.getenv("DB_USER", "root"),
+            password=os.getenv("DB_PASSWORD", "rootpassword"),
+            database=os.getenv("DB_NAME", "catgifs")
+        )
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+        return None
 
 @app.route("/")
 def index():
     url = None  # Default value in case of failure
-    try:
-        db = get_db_connection()
-        cursor = db.cursor()
-        cursor.execute("SELECT url FROM gifs")  # Fetch URLs from database
-        gifs = [row[0] for row in cursor.fetchall()]
-        db.close()
+    gifs = []
+    
+    # Connect to the database and fetch GIF URLs
+    db = get_db_connection()
+    if db:
+        try:
+            cursor = db.cursor()
+            cursor.execute("SELECT url FROM gifs")  # Fetch URLs from database
+            gifs = [row[0] for row in cursor.fetchall()]
+        except mysql.connector.Error as err:
+            print(f"Database error: {err}")
+        finally:
+            cursor.close()
+            db.close()
 
-        if gifs:
-            url = random.choice(gifs)  # Select a random GIF
-    except mysql.connector.Error as e:
-        print(f"Error connecting to MySQL: {e}")  # Log database connection errors
+    # Choose a random GIF from the database if available
+    if gifs:
+        url = random.choice(gifs)
     
     return render_template("index.html", url=url)
 

@@ -1,32 +1,27 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: flask-app
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: flask-app
-  template:
-    metadata:
-      labels:
-        app: flask-app
-    spec:
-      containers:
-      - name: flask-app
-        image: mydadisalive/flask-app:1.0.6
-        ports:
-        - containerPort: 5000
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: flask-app
-spec:
-  selector:
-    app: flask-app
-  ports:
-  - port: 80
-    targetPort: 5000
-  type: LoadBalancer
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  Api:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: !Sub
+        - ${ResourceName} From Stack ${AWS::StackName}
+        - ResourceName: Api
+      StageName: Prod
+      DefinitionBody:
+        openapi: '3.0'
+        info: {}
+        paths:
+          /:
+            get:
+              responses: {}
+      EndpointConfiguration: REGIONAL
+      TracingEnabled: true
+  UserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      AdminCreateUserConfig:
+        AllowAdminCreateUserOnly: false
+      AliasAttributes:
+        - email
+        - preferred_username
+      UserPoolName: !Sub ${AWS::StackName}-UserPool

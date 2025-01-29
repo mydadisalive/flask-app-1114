@@ -1,2 +1,67 @@
-# Ignore environment variable files
-.env
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+*.swp
+
+# Virtual environment
+venv/
+.env/
+.venv/
+*.venv
+
+# Pip dependency files
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Flask config files
+instance/
+config.py
+*.env
+.envrc
+
+# Database files
+*.sqlite3
+*.db
+*.sqlite
+migrations/
+
+# Logs & Debugging
+logs/
+*.log
+*.out
+*.err
+
+# IDE / Editor specific files
+.vscode/
+.idea/
+*.sublime-workspace
+
+# MacOS and Unix system files
+.DS_Store
+*.swp
+
+# Terraform state files
+terraform.tfstate
+terraform.tfstate.backup
+*.tfstate*
+*.tfvars
+!example.tfvars  # Allow example files for reference
+
+# Crash logs
+crash.log
+
+# Local CLI settings
+.terraformrc
+terraform.rc
+
+# Ignore Terraform lock files
+.terraform.lock.hcl
+
+# Ignore Terraform provider directories
+.terraform/
+
+# Ignore sensitive files
+*.pem
+*.key
+*.crt
+*.env

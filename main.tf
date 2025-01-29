@@ -15,7 +15,7 @@ resource "aws_instance" "web" {
               yum install -y httpd
               systemctl start httpd
               systemctl enable httpd
-              echo "<h1>Apache Server Running on $(hostname -f)!!!</h1>" > /var/www/html/index.html
+              echo "<h1>Apache Server Running on $(hostname -f)!!!!</h1>" > /var/www/html/index.html
               EOF
 
   tags = {

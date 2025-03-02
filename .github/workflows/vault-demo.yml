@@ -1,0 +1,28 @@
+name: Use HCP Vault Secrets in GitHub Actions
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-app:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Install HCP CLI
+        run: |
+          curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+          sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+          sudo apt-get update && sudo apt-get install -y hcp-cli
+      
+      - name: Authenticate with HCP Vault
+        env:
+          HCP_CLIENT_ID: ${{ secrets.HCP_CLIENT_ID }}
+          HCP_CLIENT_SECRET: ${{ secrets.HCP_CLIENT_SECRET }}
+        run: |
+          echo "$HCP_CLIENT_SECRET" | hcp configure -i $HCP_CLIENT_ID --secret-stdin
+      
+      - name: Run script with Vault Secrets
+        run: |
+          hcp vault-secrets run -- python app.py

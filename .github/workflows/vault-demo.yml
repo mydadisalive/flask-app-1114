@@ -26,7 +26,9 @@ jobs:
           HCP_CLIENT_ID: ${{ secrets.HCP_CLIENT_ID }}
           HCP_CLIENT_SECRET: ${{ secrets.HCP_CLIENT_SECRET }}
         run: |
-          hcp auth login --client-id "$HCP_CLIENT_ID" --client-secret "$HCP_CLIENT_SECRET"
+          echo "Authenticating with HCP Vault using Service Principal"
+          hcp auth logout || true  # Force logout to clear old sessions
+          hcp auth service-principal --client-id "$HCP_CLIENT_ID" --client-secret "$HCP_CLIENT_SECRET" || exit 1
           echo "Retrieving secrets from HCP Vault Secrets"
           eval $(hcp vault-secrets env)
           echo "Secrets injected into environment"

@@ -26,7 +26,7 @@ jobs:
           HCP_CLIENT_ID: ${{ secrets.HCP_CLIENT_ID }}
           HCP_CLIENT_SECRET: ${{ secrets.HCP_CLIENT_SECRET }}
         run: |
-          echo "$HCP_CLIENT_SECRET" | hcp auth login -client-id $HCP_CLIENT_ID -client-secret-stdin
+          hcp auth login --client-id "$HCP_CLIENT_ID" --client-secret "$HCP_CLIENT_SECRET"
           echo "Retrieving secrets from HCP Vault Secrets"
           eval $(hcp vault-secrets env)
           echo "Secrets injected into environment"

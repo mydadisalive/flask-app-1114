@@ -28,7 +28,8 @@ jobs:
         run: |
           echo "Authenticating with HCP Vault using Service Principal"
           hcp auth logout || true  # Force logout to clear old sessions
-          hcp auth service-principal --client-id "$HCP_CLIENT_ID" --client-secret "$HCP_CLIENT_SECRET" || exit 1
+          hcp profile create my-profile --client-id "$HCP_CLIENT_ID" --client-secret "$HCP_CLIENT_SECRET"
+          hcp auth login --profile my-profile || exit 1
           echo "Retrieving secrets from HCP Vault Secrets"
           eval $(hcp vault-secrets env)
           echo "Secrets injected into environment"

@@ -10,12 +10,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       
-      - name: Install HCP CLI
+      - name: Install HCP CLI (Latest Version)
         run: |
-          curl -LO https://releases.hashicorp.com/hcp-cli/0.15.0/hcp-cli_0.15.0_linux_amd64.zip
-          unzip hcp-cli_0.15.0_linux_amd64.zip
+          LATEST_VERSION=$(curl -s https://api.releases.hashicorp.com/v1/releases/hcp-cli/latest | jq -r '.version')
+          curl -LO https://releases.hashicorp.com/hcp-cli/${LATEST_VERSION}/hcp-cli_${LATEST_VERSION}_linux_amd64.tar.gz
+          tar -xzf hcp-cli_${LATEST_VERSION}_linux_amd64.tar.gz
           sudo mv hcp /usr/local/bin/
-          rm hcp-cli_0.15.0_linux_amd64.zip
+          rm hcp-cli_${LATEST_VERSION}_linux_amd64.tar.gz
       
       - name: Authenticate with HCP Vault Secrets and Retrieve Secrets
         env:
